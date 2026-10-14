@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  shotapi:
+    image: synapsr/shotapi:latest
+    container_name: shotapi
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    volumes:
+      - shotapi-cache:/usr/src/app/cache
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  shotapi-cache:
