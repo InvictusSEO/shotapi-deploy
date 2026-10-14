@@ -1,22 +1,17 @@
 version: '3.8'
 
 services:
-  shotapi:
-    image: synapsr/shotapi:latest
-    container_name: shotapi
+  browser:
+    image: appwrite/browser:latest
+    container_name: docker-browser
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
       - PORT=3000
-    volumes:
-      - shotapi-cache:/usr/src/app/cache
+    shm_size: '2gb'
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/health"]
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/v1/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-
-volumes:
-  shotapi-cache:
