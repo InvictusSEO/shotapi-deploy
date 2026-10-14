@@ -1,17 +1,22 @@
 version: '3.8'
 
 services:
-  browser:
-    image: appwrite/browser:latest
-    container_name: docker-browser
+  browserless:
+    image: ghcr.io/browserless/chromium:latest
+    container_name: browserless
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
       - PORT=3000
-    shm_size: '2gb'
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/v1/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - CONCURRENT=5
+      - QUEUED=10
+      - TIMEOUT=30000
+      - MAX_MEMORY_PERCENT=80
+      - MAX_CPU_PERCENT=90
+    shm_size: '1gb'
+    volumes:
+      - browserless-data:/app/data
+
+volumes:
+  browserless-data:
